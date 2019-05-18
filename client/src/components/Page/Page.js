@@ -7,7 +7,7 @@ class Page extends Component {
   }
 
   render() {
-    let page = this.props.match.params.number;
+    let page = parseInt(this.props.match.params.number);
     if (this.props.match.params.number === undefined) {
       page = 1;
     }
@@ -15,10 +15,6 @@ class Page extends Component {
     return (
       <Table
         page={page}
-        sorter={this.props.sorter}
-        filterAry={this.props.filterAry}
-        paginator={this.props.paginator}
-        tempsorter={this.props.tempsorter}
         showItem={this.props.showItem}
       />
     );

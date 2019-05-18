@@ -20,6 +20,57 @@ app.get("*", (req, res) => {
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+function paginator(items, page, per_page) {
+  page = page || 1;
+  per_page = per_page || 10;
+  let offset = (page - 1) * per_page;
+  let paginatedItems = items.slice(offset).slice(0, per_page);
+  let total_pages = Math.ceil(items.length / per_page);
+  return {
+    page: page,
+    per_page: per_page,
+    pre_page: page - 1 ? page - 1 : null,
+    next_page: total_pages > page ? page + 1 : null,
+    total_items: items.length,
+    total_pages: total_pages,
+    items_data: paginatedItems
+  };
+}
+
+//user click on sort buttons
+app.post("/Sort", (req, res) => {
+  console.log(req.body);
+  MongoClient.connect(
+    CONNECTION_URL,
+    { useNewUrlParser: true },
+    (error, client) => {
+      if (error) {
+        throw error;
+      }
+      //Access or Create Database
+      database = client.db(DATABASE_NAME);
+
+      //Access or Create Collection
+      collection = database.collection("Jobs");
+      let mysort = { [Object.keys(req.body)[0]]: Object.values(req.body)[0] };
+      //console.log(mysort)
+      database
+        .collection("Jobs")
+        .find()
+        .sort(mysort)
+        .toArray(function(err, result) {
+          if (err) throw err;
+          res.send(
+            paginator(result, req.body.page, req.body.showItem).items_data
+          );
+          client.close();
+        });
+      //console.log("Connected to `" + DATABASE_NAME + "`!");
+    }
+  );
+});
+
+//Display data firstime
 app.post("/Display", function(req, res) {
   MongoClient.connect(
     CONNECTION_URL,
@@ -40,10 +91,9 @@ app.post("/Display", function(req, res) {
       database
         .collection("Jobs")
         .find()
-        .toArray(function(err, result) {
-          if (err) throw err;
-          console.log(result);
-          res.send(result);
+        .count()
+        .then(length => {
+          res.send({length})
           client.close();
         });
     }

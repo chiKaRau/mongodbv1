@@ -5,14 +5,12 @@ class TableBody extends Component {
     super(props);
   }
 
-  render() {
-    let filterAry = this.props.paginator(
-      this.props.filterAry,
-      this.props.page,
-      this.props.showItem
-    ).items_data;
+  //component change
+  //do rerender
+  //data 0 1 2 3 4 5 6
 
-    const displayJob = filterAry.map(job => {
+  render() {
+    const displayJob = this.props.pageAry.map(job => {
       let post_date = job.post_date;
       return (
         <tr key={job._id}>
@@ -26,6 +24,7 @@ class TableBody extends Component {
         </tr>
       );
     });
+
     return <tbody>{displayJob}</tbody>;
   }
 }
