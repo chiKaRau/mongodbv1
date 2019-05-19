@@ -99,40 +99,41 @@ class Table extends Component {
         showItem: this.props.showItem
       })
       .then(res => {
-        console.log(res.data);
+        //console.log(res.data);
         this.setState({
           pageAry: res.data
         });
       });
   };
 
+  tempsorter = str => {};
+
   render() {
-    //console.log(this.props.page);
-    //console.log(this.state.pageAry);
-    const displayJob = this.state.pageAry.map(job => {
-      let post_date = job.post_date;
+    //if user input, then pass the result data to <TableHeader /> and <TableBody />
+    if (this.props.queryAry !== undefined && this.props.queryAry.length > 0) {
       return (
-        <tr key={job._id}>
-          <th scope="row">{job._id + 1}</th>
-          <td>{post_date.slice(0, 10)}</td>
-          <td>{job.company_name}</td>
-          <td>{job.address}</td>
-          <td>{job.position}</td>
-          <td>{job.salaray}</td>
-          <td>{job.contactInfo}</td>
-        </tr>
+        <table id="myTable" className="table table-dark">
+          <TableHeader sorter={this.tempsorter} />
+          <TableBody
+            showItem={this.props.showItem}
+            pageAry={this.props.queryAry}
+          />
+        </table>
       );
-    });
-    return (
-      <table id="myTable" className="table table-dark">
-        <TableHeader sorter={this.sorter} />
-        <TableBody
-          page={this.props.page}
-          showItem={this.props.showItem}
-          pageAry={this.state.pageAry}
-        />
-      </table>
-    );
+    } else {
+      //else pass the (showItem) data to <TableHeader /> and <TableBody />
+      //The app would query a number of data (depend on showItem) from database
+      //instead of all the data
+      return (
+        <table id="myTable" className="table table-dark">
+          <TableHeader sorter={this.sorter} />
+          <TableBody
+            showItem={this.props.showItem}
+            pageAry={this.state.pageAry}
+          />
+        </table>
+      );
+    }
   }
 }
 

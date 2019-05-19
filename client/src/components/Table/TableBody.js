@@ -5,11 +5,8 @@ class TableBody extends Component {
     super(props);
   }
 
-  //component change
-  //do rerender
-  //data 0 1 2 3 4 5 6
-
   render() {
+    //Display data from the array we passed
     const displayJob = this.props.pageAry.map(job => {
       let post_date = job.post_date;
       return (

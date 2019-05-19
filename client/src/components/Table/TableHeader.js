@@ -5,6 +5,7 @@ class TableHeader extends Component {
     super(props);
   }
   render() {
+    //Clicking the Table header to do the sorting
     return (
       <thead>
         <tr>
